@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting to Know Claude</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#14181f);--ink:light-dark(#1d2228,#f3f4f6);--soft:light-dark(#4f5964,#bcc4cd);
+--sun:light-dark(#fff1c7,#2a2516);--teal:light-dark(#1f5f6b,#7fd0dc);--tealbg:light-dark(#1f5f6b,#1d4a53);
+--coral:#e8674a;--gold:#f5b21b;--mist:light-dark(#eef6f7,#1c2a30);--line:light-dark(#d5dde2,#323d46);
+--good:light-dark(#eaf6ee,#18301f);--bad:light-dark(#fcefec,#3a201b)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:20px/1.6 "Atkinson Hyperlegible",Verdana,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(32px,5vw,72px) max(5vw,18px)}
+.wrap{max-width:1120px;margin:0 auto}
+h1{font-size:clamp(36px,6vw,52px);line-height:1.08;margin:0 0 14px;text-wrap:balance}
+h2{font-size:clamp(30px,4.2vw,40px);line-height:1.12;margin:0 0 14px;text-wrap:balance}
+h3{font-size:24px;line-height:1.25;margin:0 0 6px}
+p{margin:0 0 16px;max-width:36em}
+.lead{font-size:23px}
+.num{display:inline-grid;place-items:center;width:50px;height:50px;border-radius:50%;background:var(--coral);color:#fff;font-weight:700;font-size:25px;margin-bottom:12px}
+nav.scroll{display:flex;gap:10px;flex-wrap:nowrap;padding:12px max(5vw,18px);border-bottom:2px solid var(--line);overflow-x:auto;background:var(--bg)}
+nav a{flex:none;color:var(--teal);font-weight:700;text-decoration:none;padding:10px 16px;border-radius:30px;background:var(--mist);font-size:18px}
+a:focus-visible,button:focus-visible{outline:4px solid var(--coral);outline-offset:3px}
+@media(min-width:900px){nav.scroll{position:sticky;top:0;z-index:5}}
+html{scroll-padding-top:80px}
+.btn{font:inherit;font-size:20px;font-weight:700;min-height:58px;padding:10px 24px;border-radius:32px;border:3px solid var(--tealbg);background:var(--bg);color:var(--teal);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.btn.main{background:var(--tealbg);color:#fff}
+.btn svg{width:22px;height:22px;flex:none}
+.hello{background:var(--sun)}
+.intro{max-width:760px;margin-bottom:26px}
+.demo{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+.phone{background:#20262d;border-radius:46px;padding:14px;box-shadow:0 26px 50px -22px #0008,inset 0 0 0 2px #3c4650;width:100%;max-width:380px;margin:0 auto}
+.scr{position:relative;height:600px;border-radius:34px;overflow:hidden;background:light-dark(#faf8f4,#1c232b);display:flex;flex-direction:column}
+.top{padding:18px 18px 10px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:18px;border-bottom:1px solid var(--line)}
+.top span{font-weight:400;color:var(--soft);font-size:15px}
+.msgs{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;padding:14px;overflow:hidden}
+.m{padding:12px 15px;border-radius:20px;font-size:17px;line-height:1.42;max-width:88%}
+.me{align-self:flex-end;background:var(--tealbg);color:#fff;border-bottom-right-radius:6px}
+.cl{align-self:flex-start;background:light-dark(#fff,#27313b);border:2px solid var(--line);border-bottom-left-radius:6px}
+.welcome{margin:auto;text-align:center;font-size:24px;font-weight:700;padding:20px}
+.welcome small{display:block;font-weight:400;font-size:17px;color:var(--soft);margin-top:6px}
+.inbar{display:flex;align-items:center;gap:8px;padding:12px 12px 18px}
+.field{flex:1;min-height:50px;border:2px solid var(--line);border-radius:26px;padding:11px 16px;font-size:17px;line-height:1.35;background:light-dark(#fff,#27313b);color:var(--ink)}
+.field.ph{color:var(--soft)}
+.field.on{border-color:var(--teal)}
+.round{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--mist);color:var(--ink);font-size:26px;font-weight:700}
+.round.go{background:var(--coral);color:#fff}
+.round.live{background:var(--coral);box-shadow:0 0 0 8px #e8674a44}
+.round svg{width:20px;height:20px}
+.wave{display:flex;align-items:center;gap:4px;height:28px}
+.wave i{display:block;width:5px;border-radius:3px;background:var(--coral)}
+.photo{width:150px;border-radius:12px;align-self:flex-end;background:#fff;border:2px solid var(--line);padding:10px}
+.photo b{display:block;height:8px;border-radius:4px;background:#c8ced4;margin:6px 0}
+.photo b:first-child{width:60%;background:#7b8794}
+.home{flex:1;padding:44px 22px 22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 10px;align-content:start;background:linear-gradient(160deg,#6aa9b4,#2f6f7b)}
+.app{text-align:center;color:#fff;font-size:13px}
+.app i{display:block;aspect-ratio:1;border-radius:16px;margin:0 auto 5px;width:100%;max-width:58px;box-shadow:0 4px 8px #0003}
+.app.cl2 i{background:var(--coral);display:grid;place-items:center}
+.app.cl2.pulse i{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.1)}}
+.done{margin:auto;text-align:center;padding:24px}
+.done svg{width:110px;height:110px}
+.done b{display:block;font-size:28px;line-height:1.2;margin:10px 0}
+.finger{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:#f5b21b88;border:3px solid #fff;box-shadow:0 4px 12px #0005;transition:left .7s ease,top .7s ease,opacity .3s;pointer-events:none;opacity:0;z-index:3}
+.finger.show{opacity:1}
+.finger.tap::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:4px solid var(--gold);animation:ripple .8s ease-out infinite}
+@keyframes ripple{from{transform:scale(.6);opacity:1}to{transform:scale(1.4);opacity:0}}
+.side .stepno{font-size:18px;font-weight:700;color:var(--coral);margin-bottom:6px}
+.cap{font-size:clamp(25px,3vw,31px);line-height:1.3;font-weight:700;min-height:4em;margin-bottom:18px;text-wrap:balance}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.dots{display:flex;flex-wrap:wrap;gap:8px}
+.dots button{width:44px;height:44px;border-radius:50%;border:3px solid var(--tealbg);background:var(--bg);color:var(--teal);font:inherit;font-size:17px;font-weight:700;cursor:pointer}
+.dots button[aria-current=true]{background:var(--tealbg);color:#fff}
+.prog{height:10px;border-radius:5px;background:light-dark(#ffffffaa,#ffffff22);margin:0 0 18px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--coral);border-radius:5px}
+.note{font-size:18px;color:var(--soft)}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:22px}
+.step{background:var(--mist);border-radius:24px;padding:24px}
+.step .num{background:var(--tealbg)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin-top:22px}
+.card{border:2px solid var(--line);border-radius:22px;padding:22px;background:var(--bg)}
+.card svg{width:56px;height:56px;margin-bottom:8px}
+.card .say{display:block;margin-top:8px;font-style:italic;color:var(--teal)}
+.compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:22px}
+.c{border-radius:22px;padding:24px;border:3px solid}
+.c.no{background:var(--bad);border-color:#d0705c}.c.yes{background:var(--good);border-color:#3c9a62}
+.c .lab{font-weight:700;font-size:22px;margin-bottom:10px}
+.c q{display:block;font-size:22px;quotes:"“" "”";margin-bottom:10px}
+.c small{font-size:18px;color:var(--soft);display:block}
+.builder{display:grid;gap:22px;margin-top:20px}
+.row h3{margin-bottom:10px}
+.opts{display:flex;flex-wrap:wrap;gap:12px}
+.opts button{font:inherit;font-size:19px;min-height:56px;padding:10px 20px;border-radius:30px;border:3px solid var(--tealbg);background:var(--bg);color:var(--teal);cursor:pointer}
+.opts button[aria-pressed=true]{background:var(--tealbg);color:#fff}
+.result{background:var(--tealbg);color:#fff;border-radius:24px;padding:26px;font-size:clamp(22px,2.6vw,27px);line-height:1.45}
+.result .hint{display:block;font-size:18px;color:#d3eaee;margin-bottom:8px}
+.result .btn{margin-top:16px;background:var(--gold);border-color:var(--gold);color:#1d1500}
+.phrases{display:grid;gap:14px;margin-top:20px;padding:0;list-style:none}
+.phrases li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:start;border-left:8px solid var(--gold);background:var(--bg);padding:16px 20px;border-radius:0 18px 18px 0}
+.phrases .num{margin:0;width:44px;height:44px;font-size:21px}
+.phrases b{font-size:23px;display:block}
+.phrases span{color:var(--soft);font-size:19px}
+.mist{background:var(--mist)}
+.safe{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:18px;margin-top:22px}
+.safe div{border-radius:22px;padding:22px;background:var(--sun)}
+footer{text-align:center;font-size:22px;background:var(--sun)}
+@media(max-width:800px){.demo,.compare,.steps{grid-template-columns:minmax(0,1fr)}.cap{min-height:0}}
+@media(max-width:600px){body{font-size:19px}.scr{height:540px}.lead{font-size:21px}}
+</style>
+</head>
+<body>
+
+<nav class="scroll" aria-label="Sections">
+  <a href="#watch">Watch the demo</a><a href="#how">Three steps</a><a href="#ideas">Things to ask</a><a href="#better">Better answers</a><a href="#build">Try it</a><a href="#phrases">Handy phrases</a><a href="#safe">Good to know</a>
+</nav>
+
+<header class="band hello" id="watch">
+  <div class="wrap">
+    <div class="intro">
+      <h1>Hello! Let’s get to know Claude together</h1>
+      <p class="lead">Claude is a friendly helper on your phone or computer. You ask in your own words, by typing or talking, and it answers in plain English. Press <b>Play</b> and watch how it works. It takes about a minute.</p>
+    </div>
+    <div class="demo">
+      <div class="phone"><div class="scr" id="scr" aria-hidden="true"></div></div>
+      <div class="side">
+        <div class="prog"><i id="bar"></i></div>
+        <div class="stepno" id="stepno"></div>
+        <div class="cap" id="cap" aria-live="polite"></div>
+        <div class="ctrl">
+          <button class="btn main" id="play" type="button"></button>
+          <button class="btn" id="back" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 5l-8 7 8 7z"/></svg>Back</button>
+          <button class="btn" id="next" type="button">Next<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 5l8 7-8 7z"/></svg></button>
+          <button class="btn" id="voice" type="button" aria-pressed="false"></button>
+        </div>
+        <div class="dots" id="dots" aria-label="Jump to a step"></div>
+        <p class="note" style="margin-top:16px">Tip: you can stop at any step and press <b>Next</b> when you’re ready. Nothing moves until you say so.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="band" id="how">
+  <div class="wrap">
+    <h2>It all comes down to three steps</h2>
+    <p>That’s really it. You can repeat the last step as often as you like.</p>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Open Claude</h3><p>Tap the Claude app on your phone, or open it on your computer. “New chat” gives you a fresh page.</p></div>
+      <div class="step"><div class="num">2</div><h3>Ask your way</h3><p>Type in the box at the bottom, or tap the microphone and simply talk.</p></div>
+      <div class="step"><div class="num">3</div><h3>Read and chat back</h3><p>Not quite what you wanted? Say so, like you would to a friend. It happily tries again.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band mist" id="ideas">
+  <div class="wrap">
+    <h2>A few lovely things to ask</h2>
+    <p>Some ideas to get you started. The words in color are things you can type exactly as written.</p>
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
+
+<section class="band" id="better">
+  <div class="wrap">
+    <h2>The secret to great answers: share a little</h2>
+    <p class="lead">Claude doesn’t know you yet. A few details about who, what and how makes a world of difference.</p>
+    <div class="compare">
+      <div class="c no"><div class="lab">Fine, but plain</div><q>Write a birthday card.</q><small>You’ll get something that could be for anyone.</small></div>
+      <div class="c yes"><div class="lab">Wonderful</div><q>Write a short, warm birthday card for my granddaughter Emma. She’s turning 16, loves horses, and I’m so proud of her.</q><small>Who it’s for, what you want, and how it should feel.</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="band mist" id="build">
+  <div class="wrap">
+    <h2>Try it: build your own question</h2>
+    <p>Press one button in each row. A ready-made question appears below for you to copy into Claude.</p>
+    <div class="builder">
+      <div class="row"><h3>What would you like?</h3><div class="opts" data-k="what"></div></div>
+      <div class="row"><h3>A little about you</h3><div class="opts" data-k="who"></div></div>
+      <div class="row"><h3>How should it answer?</h3><div class="opts" data-k="how"></div></div>
+      <div class="result" aria-live="polite"><span class="hint">Your question:</span><span id="out"></span><br><button class="btn" id="copy" type="button">Copy this question</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="phrases">
+  <div class="wrap">
+    <h2>Six handy phrases worth keeping nearby</h2>
+    <p>Say these any time, in the middle of any chat.</p>
+    <ul class="phrases" id="ph"></ul>
+  </div>
+</section>
+
+<section class="band mist" id="safe">
+  <div class="wrap">
+    <h2>Good to know</h2>
+    <div class="safe">
+      <div><h3>It’s smart, not perfect</h3><p>Claude sometimes gets things wrong. For health, money or legal matters, check with your doctor, pharmacist, bank or lawyer.</p></div>
+      <div><h3>Keep private things private</h3><p>There’s no need to type passwords, card numbers or your Social Security number.</p></div>
+      <div><h3>Claude never calls you</h3><p>It won’t phone, email, or ask for money or gift cards. If someone does, it isn’t Claude.</p></div>
+      <div><h3>You can’t break it</h3><p>Pressed the wrong thing? No harm done. Tap “New chat” and start fresh.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="band">Take your time. There’s no rush, and no question is too small.</footer>
+
+<script>
+{
+const scr=document.getElementById('scr');
+const typed=(s,t,a,b)=>{const p=Math.max(0,Math.min(1,(t-a)/(b-a)));return s.slice(0,Math.round(s.length*p));};
+const words=(s,t,a,b)=>{const w=s.split(' ');const p=Math.max(0,Math.min(1,(t-a)/(b-a)));return w.slice(0,Math.ceil(w.length*p)).join(' ');};
+const mic='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="8" y="2" width="8" height="13" rx="4"/><path d="M5 11a7 7 0 0 0 14 0h-2a5 5 0 0 1-10 0zM11 18h2v4h-2z"/></svg>';
+const arrow='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l8 9h-5v9H9v-9H4z"/></svg>';
+function chat(msgs,input,opt={}){
+  const body=msgs.length?msgs.map(m=>m[0]==='photo'?`<div class="photo"><b></b><b></b><b></b><b></b></div>`:`<div class="m ${m[0]}">${m[1]}</div>`).join(''):`<div class="welcome">Good evening!<small>How can I help you today?</small></div>`;
+  let f;
+  if(opt.wave){f=`<div class="field on"><div class="wave">${Array.from({length:16},(_,i)=>`<i style="height:${6+Math.abs(Math.sin(opt.wave*9+i*.8))*22}px"></i>`).join('')}</div></div>`;}
+  else f=`<div class="field${input?' on':' ph'}" data-t="field">${input||'Write a message…'}</div>`;
+  const right=input&&!opt.wave?`<div class="round go" data-t="send">${arrow}</div>`:`<div class="round${opt.wave?' live':''}" data-t="mic">${mic}</div>`;
+  return `<div class="top">Claude <span>New chat</span></div><div class="msgs">${body}</div><div class="inbar"><div class="round" data-t="plus">+</div>${f}${right}</div>`;
+}
+const apps=[['Phone','#4caf50'],['Messages','#43a047'],['Photos','#f4b400'],['Camera','#78909c'],['Mail','#2f80ed'],['Claude','c'],['Weather','#42a5f5'],['Clock','#37474f'],['Music','#e53958'],['Maps','#26a69a'],['Notes','#f9c74f'],['Settings','#8d99a6']];
+function home(pulse){return `<div class="home">${apps.map(a=>a[1]==='c'?`<div class="app cl2${pulse?' pulse':''}" data-t="app"><i><svg width="30" height="30" viewBox="0 0 30 30"><g stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M15 4v22M4 15h22M7 7l16 16M23 7L7 23"/></g></svg></i>Claude</div>`:`<div class="app"><i style="background:${a[1]}"></i>${a[0]}</div>`).join('')}</div>`;}
+const Q1='Which flowers grow well in a shady garden?';
+const A1='What a lovely question! Hostas, ferns, impatiens, foxgloves and bleeding hearts all love the shade. Hostas are especially easy: they come back every year with very little care.';
+const Q2='Which one is easiest for a beginner?';
+const A2='Hostas. Plant them once, water now and then, and they’ll return every spring.';
+const V='What can I make for supper with eggs and potatoes?';
+const VA='A cozy Spanish omelet! Slice the potatoes thin, soften them in a pan with a little oil, pour in beaten eggs, and cook gently until set. Would you like the steps one at a time?';
+const P='What is this letter asking me to do?';
+const PA='This is from your water company. It says your bill is going up a little next month, from $42 to $45. You don’t need to do anything. It’s just letting you know.';
+const scenes=[
+ {cap:'First, find the Claude app on your phone and give it a gentle tap.',d:6,f:t=>({h:home(true),tg:'app',tap:t>.45})},
+ {cap:'Claude opens with a clean, empty page, ready and waiting for you.',d:5,f:t=>({h:chat([],''),tg:t>.5?'field':null})},
+ {cap:'Tap the box at the bottom and type your question, just the way you’d say it.',d:8,f:t=>({h:chat([],typed(Q1,t,.15,.9)),tg:'field',tap:t<.15})},
+ {cap:'When you’re happy with it, tap the arrow to send.',d:4,f:t=>({h:t<.5?chat([],Q1):chat([['me',Q1]],''),tg:'send',tap:t>.25&&t<.55})},
+ {cap:'A moment later, Claude writes back. Read at your own pace; there’s no hurry.',d:9,f:t=>({h:chat([['me',Q1],...(t>.1?[['cl',words(A1,t,.1,.75)]]:[])],''),tg:null})},
+ {cap:'Want more, or something simpler? Just ask again, as if you’re chatting with a friend.',d:10,f:t=>{const m=[['me',Q1],['cl',A1]];if(t<.45)return{h:chat(m,typed(Q2,t,.05,.4)),tg:'field'};return{h:chat([...m,['me',Q2],...(t>.55?[['cl',words(A2,t,.55,.85)]]:[])],''),tg:t<.55?'send':null,tap:t<.55};}},
+ {cap:'Rather talk than type? Tap the microphone and simply speak. Your words appear for you.',d:10,f:t=>{if(t<.15)return{h:chat([],''),tg:'mic',tap:true};if(t<.55)return{h:chat([],'x',{wave:t}),tg:'mic'};if(t<.65)return{h:chat([],V),tg:'send',tap:true};return{h:chat([['me',V],['cl',words(VA,t,.68,.95)]],''),tg:null};}},
+ {cap:'Puzzled by a letter or a bill? Tap the plus sign, add a photo of it, and ask what it means.',d:11,f:t=>{if(t<.15)return{h:chat([],''),tg:'plus',tap:true};if(t<.45)return{h:chat([['photo']],typed(P,t,.18,.42)),tg:'field'};if(t<.52)return{h:chat([['photo']],P),tg:'send',tap:true};return{h:chat([['photo'],['me',P],['cl',words(PA,t,.55,.88)]],''),tg:null};}},
+ {cap:'And that’s all there is to it. You’ve got this!',d:6,f:()=>({h:`<div class="done"><svg viewBox="0 0 110 110"><circle cx="55" cy="55" r="52" fill="#f5b21b"/><circle cx="40" cy="46" r="6" fill="#1d2228"/><circle cx="70" cy="46" r="6" fill="#1d2228"/><path d="M34 66q21 22 42 0" stroke="#1d2228" stroke-width="6" fill="none" stroke-linecap="round"/></svg><b>That’s it!</b>Ask anything, anytime.</div>`,tg:null})}
+];
+const finger=document.createElement('div');finger.className='finger';
+let idx=0,el=0,playing=false,last=0,lastH='',voice=false;
+const cap=document.getElementById('cap'),stepno=document.getElementById('stepno'),bar=document.getElementById('bar'),playB=document.getElementById('play'),voiceB=document.getElementById('voice'),dots=document.getElementById('dots');
+const total=scenes.reduce((a,s)=>a+s.d,0);
+dots.innerHTML=scenes.map((s,i)=>`<button type="button" data-i="${i}" aria-label="Step ${i+1}">${i+1}</button>`).join('');
+function speak(){try{speechSynthesis.cancel();if(voice){const u=new SpeechSynthesisUtterance(scenes[idx].cap);u.rate=.88;speechSynthesis.speak(u);}}catch(e){}}
+function setPlay(){playB.innerHTML=playing?'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Pause':(idx===scenes.length-1&&el>=scenes[idx].d?'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4a8 8 0 1 0 8 8h-3a5 5 0 1 1-5-5v3l5-4.5L12 1z"/></svg>Watch again':'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>Play');}
+function setVoice(){voiceB.innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9h4l5-5v16l-5-5H4z"/>${voice?'<path d="M16 8a5 5 0 0 1 0 8M18.5 5.5a8.5 8.5 0 0 1 0 13" stroke="currentColor" stroke-width="2" fill="none"/>':''}</svg>${voice?'Reading aloud: on':'Read aloud'}`;voiceB.setAttribute('aria-pressed',voice);}
+function go(i,auto){idx=Math.max(0,Math.min(scenes.length-1,i));el=0;lastH='';cap.textContent=scenes[idx].cap;stepno.textContent=`Step ${idx+1} of ${scenes.length}`;dots.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-current',j===idx));if(!auto)speak();else if(playing)speak();draw();setPlay();}
+function draw(){
+  const s=scenes[idx],t=Math.min(1,el/s.d),r=s.f(t);
+  if(r.h!==lastH){scr.innerHTML=r.h;scr.appendChild(finger);lastH=r.h;}
+  const tg=r.tg&&scr.querySelector(`[data-t="${r.tg}"]`);
+  if(tg){const a=scr.getBoundingClientRect(),b=tg.getBoundingClientRect();finger.style.left=(b.left-a.left+b.width/2)+'px';finger.style.top=(b.top-a.top+b.height/2)+'px';finger.classList.add('show');finger.classList.toggle('tap',!!r.tap);}
+  else finger.classList.remove('show','tap');
+  const before=scenes.slice(0,idx).reduce((a,x)=>a+x.d,0);bar.style.width=((before+Math.min(el,s.d))/total*100)+'%';
+}
+function loop(now){if(playing){el+=(now-last)/1000;last=now;if(el>=scenes[idx].d){if(idx<scenes.length-1){go(idx+1,true);}else{el=scenes[idx].d;playing=false;setPlay();}}draw();}requestAnimationFrame(loop);}
+playB.addEventListener('click',()=>{if(!playing&&idx===scenes.length-1&&el>=scenes[idx].d)go(0);playing=!playing;last=performance.now();if(playing&&el===0)speak();if(!playing){try{speechSynthesis.cancel()}catch(e){}}setPlay();});
+document.getElementById('next').addEventListener('click',()=>go(idx+1));
+document.getElementById('back').addEventListener('click',()=>go(idx-1));
+dots.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(+b.dataset.i);});
+voiceB.addEventListener('click',()=>{voice=!voice;setVoice();speak();});
+if(!('speechSynthesis' in window))voiceB.hidden=true;
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(idx+1);if(e.key==='ArrowLeft')go(idx-1);});
+new ResizeObserver(()=>{lastH='';draw();}).observe(scr);
+setVoice();go(0);requestAnimationFrame(loop);
+
+const ic=d=>`<svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="27" fill="var(--sun)"/>${d}</svg>`;
+const cards=[
+ ["Write a note or letter",ic('<rect x="13" y="17" width="30" height="22" rx="3" fill="#fff" stroke="#1f5f6b" stroke-width="3"/><path d="M13 19l15 11 15-11" fill="none" stroke="#1f5f6b" stroke-width="3"/>'),"Thank-you notes, birthday cards, a letter to a company.","“Help me write a thank-you note to my neighbor for shoveling my driveway.”"],
+ ["Explain a confusing letter",ic('<rect x="16" y="12" width="24" height="32" rx="3" fill="#fff" stroke="#1f5f6b" stroke-width="3"/><circle cx="36" cy="36" r="7" fill="none" stroke="#e8674a" stroke-width="4"/><path d="M41 41l5 5" stroke="#e8674a" stroke-width="4" stroke-linecap="round"/>'),"Snap a photo of a bill or form with the + button and ask about it.","“What is this letter asking me to do? Please explain simply.”"],
+ ["Get ready for an appointment",ic('<path d="M28 42s-13-8-13-17a7 7 0 0 1 13-3 7 7 0 0 1 13 3c0 9-13 17-13 17z" fill="#e8674a"/>'),"Understand a medical word, or plan your questions ahead of time.","“What questions should I ask my doctor about my new blood pressure pills?”"],
+ ["Cooking ideas",ic('<path d="M14 30h28a14 14 0 0 1-28 0z" fill="#1f5f6b"/><path d="M22 24c0-4 4-4 4-8M30 24c0-4 4-4 4-8" stroke="#e8674a" stroke-width="3" fill="none" stroke-linecap="round"/>'),"Simple meals from whatever’s in the cupboard.","“I have chicken, rice and carrots. What’s an easy supper?”"],
+ ["Help with your phone",ic('<rect x="19" y="10" width="18" height="36" rx="4" fill="#1f5f6b"/><rect x="22" y="15" width="12" height="22" fill="#fff"/><circle cx="28" cy="41" r="2" fill="#fff"/>'),"Friendly, step-by-step help that waits for you.","“How do I make the letters bigger on my phone? One step at a time, please.”"],
+ ["Stories and memories",ic('<rect x="10" y="14" width="26" height="18" rx="8" fill="#1f5f6b"/><rect x="22" y="26" width="26" height="16" rx="8" fill="#e8674a"/>'),"Chat about history or music, or write down family stories.","“Help me write the story of how I met my wife, for my grandchildren.”"]
+];
+document.getElementById('cards').innerHTML=cards.map(c=>`<div class="card">${c[1]}<h3>${c[0]}</h3><p>${c[2]}</p><span class="say">${c[3]}</span></div>`).join('');
+
+const opts={
+ what:[["A letter","help me write a short letter to my bank asking them to update my address"],["Explain something","explain what a “Roth IRA” is"],["A recipe","suggest an easy, comforting supper for one"],["Phone help","show me how to send a photo to my daughter by text message"]],
+ who:[["New to this","I’m new to this kind of technology"],["Big print","I find small print hard to read"],["Cooking for one","I usually cook just for myself"],["In no hurry","I like to take things slowly"]],
+ how:[["Short & simple","Please keep it short and use simple words."],["Step by step","Please go one step at a time and wait for me before the next step."],["Short list","Please use a short numbered list."],["Warm & chatty","Please keep a warm, friendly tone."]]
+};
+const pick={what:0,who:0,how:0},out=document.getElementById('out');
+const render=()=>{const u=opts.who[pick.who][1];out.textContent=`Hello! ${u.charAt(0).toUpperCase()+u.slice(1)}. Could you ${opts.what[pick.what][1]}? ${opts.how[pick.how][1]}`;};
+document.querySelectorAll('.opts').forEach(o=>{const k=o.dataset.k;o.innerHTML=opts[k].map((x,i)=>`<button type="button" data-i="${i}" aria-pressed="${i===0}">${x[0]}</button>`).join('');
+ o.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;pick[k]=+b.dataset.i;o.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});});
+render();
+const cp=document.getElementById('copy');
+cp.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(out.textContent);cp.textContent='Copied! Now paste it into Claude';}catch(e){cp.textContent='Press and hold the words to copy them';}setTimeout(()=>cp.textContent='Copy this question',3500);});
+
+const ph=[["“Explain that more simply.”","When an answer has too many big words."],["“Shorter, please.”","When there’s too much to read."],["“One step at a time.”","For instructions. It will wait for you."],["“What does … mean?”","Ask about any word. No question is silly."],["“Are you sure? Please double-check.”","If something sounds off, it will look again."],["“Let’s start over.”","Or tap “New chat” for a clean page."]];
+document.getElementById('ph').innerHTML=ph.map((p,i)=>`<li><span class="num">${i+1}</span><div><b>${p[0]}</b><span>${p[1]}</span></div></li>`).join('');
+}
+</script>
+</body>
+</html>
